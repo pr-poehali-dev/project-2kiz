@@ -15,236 +15,254 @@ const Index = () => {
     setIsScanning(true);
     setTimeout(() => {
       setIsScanning(false);
-      setGeneratedCode(`ДУБЛИКАТ_${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+      setGeneratedCode(`КИЗ-${Date.now().toString().slice(-6)}`);
       setShowResult(true);
-    }, 3000);
+    }, 2500);
   };
 
   const downloadCode = () => {
-    const element = document.createElement('a');
-    const file = new Blob([generatedCode], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = 'datamatrix_duplicate.txt';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 200;
+    
+    if (ctx) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, 200, 200);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '12px monospace';
+      ctx.fillText(generatedCode, 10, 100);
+    }
+    
+    const link = document.createElement('a');
+    link.download = 'datamatrix-code.png';
+    link.href = canvas.toDataURL();
+    link.click();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
-      
+    <div className="min-h-screen pearl-bg">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-6">
-        {/* Animated Background */}
-        <div className="absolute inset-0 pearl-gradient opacity-40 animate-shimmer"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-float"></div>
+      <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 pearl-gradient opacity-60"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl float-animation"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl float-animation" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-emerald-200/20 rounded-full blur-3xl float-animation" style={{animationDelay: '4s'}}></div>
         
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
+        <div className="relative z-10 text-center max-w-5xl mx-auto">
           {/* Logo */}
-          <div className="mb-8 animate-float">
-            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-700 bg-clip-text text-transparent mb-4">
-              2КИЗ
-            </h1>
-            <div className="w-32 h-1 mx-auto holographic-gradient rounded-full"></div>
+          <div className="mb-16">
+            <div className="inline-block shimmer">
+              <h1 className="text-8xl md:text-9xl font-thin tracking-tight bg-gradient-to-br from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent mb-6">
+                2КИЗ
+              </h1>
+            </div>
+            <div className="w-24 h-0.5 mx-auto bg-gradient-to-r from-transparent via-blue-500 to-transparent glow-pulse"></div>
           </div>
 
           {/* Headlines */}
-          <div className="mb-12 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-semibold text-slate-800 mb-6">
-              Дублируйте КИЗ за секунды – бесплатно
+          <div className="mb-16 space-y-8">
+            <h2 className="text-4xl md:text-6xl font-light text-gray-800 leading-tight">
+              Дублируйте КИЗ<br />
+              <span className="font-medium bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                за секунды
+              </span>
             </h2>
-            <p className="text-xl md:text-2xl text-slate-600 font-light max-w-2xl mx-auto">
-              Просто отсканируйте код, и мы сделаем всё за вас
+            <p className="text-xl md:text-2xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
+              Первый бесплатный сервис для мгновенного создания дубликатов DataMatrix кодов
             </p>
           </div>
 
-          {/* CTA Button */}
-          <Button 
-            size="lg" 
-            className="holographic-gradient text-white font-semibold px-12 py-6 text-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 border-0"
-          >
-            Попробовать бесплатно
-            <Icon name="Sparkles" className="ml-2" size={24} />
-          </Button>
+          {/* CTA */}
+          <div className="space-y-6">
+            <Button 
+              size="lg" 
+              className="btn-primary text-white font-medium px-16 py-6 text-xl rounded-2xl border-0 shadow-2xl"
+              onClick={() => document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Начать работу
+              <Icon name="ArrowDown" className="ml-3" size={20} />
+            </Button>
+            <p className="text-sm text-gray-500 font-light">
+              Без регистрации • Бесплатно • Мгновенно
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Scanning Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-2xl mx-auto">
-          <Card className="liquid-glass rounded-3xl p-8 shadow-2xl">
-            <div className="text-center mb-8">
-              <Icon name="QrCode" size={48} className="mx-auto mb-4 text-blue-600" />
-              <h3 className="text-2xl font-semibold text-slate-800 mb-2">
-                Сканирование DataMatrix
-              </h3>
-              <p className="text-slate-600">
-                Загрузите изображение или введите код вручную
-              </p>
-            </div>
+      {/* Scanner Section */}
+      <section id="scanner" className="py-32 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl md:text-5xl font-light text-gray-800 mb-6">
+              Сканирование кода
+            </h3>
+            <p className="text-xl text-gray-600 font-light">
+              Загрузите изображение или введите код вручную
+            </p>
+          </div>
 
-            <div className="space-y-6">
+          <Card className="glass-card rounded-3xl p-12 max-w-2xl mx-auto">
+            <div className="space-y-8">
+              {/* Input Section */}
               <div className="relative">
+                <div className="absolute -top-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-sm rounded-lg text-sm text-gray-600 font-medium">
+                  DataMatrix код
+                </div>
                 <Input
                   type="text"
-                  placeholder="Введите DataMatrix код или загрузите изображение..."
+                  placeholder="Введите код или загрузите изображение..."
                   value={dataMatrix}
                   onChange={(e) => setDataMatrix(e.target.value)}
-                  className="h-14 text-lg rounded-xl border-2 border-slate-200 focus:border-blue-400 transition-colors"
+                  className="h-16 text-lg rounded-2xl border-0 bg-white/60 backdrop-blur-sm shadow-inner focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all duration-300"
                 />
+                
+                {/* Upload Buttons */}
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex gap-2">
-                  <Button variant="ghost" size="sm" className="rounded-lg">
-                    <Icon name="Upload" size={20} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-10 h-10 rounded-xl bg-white/60 hover:bg-white/80 backdrop-blur-sm transition-all duration-300"
+                  >
+                    <Icon name="Upload" size={18} className="text-gray-600" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="rounded-lg">
-                    <Icon name="Camera" size={20} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-10 h-10 rounded-xl bg-white/60 hover:bg-white/80 backdrop-blur-sm transition-all duration-300"
+                  >
+                    <Icon name="Camera" size={18} className="text-gray-600" />
                   </Button>
                 </div>
               </div>
 
+              {/* Generate Button */}
               <Button 
                 onClick={handleScan}
                 disabled={!dataMatrix || isScanning}
-                className="w-full h-14 text-lg font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 transition-all duration-300"
+                className="w-full h-16 text-lg font-medium rounded-2xl btn-primary border-0 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isScanning ? (
-                  <>
-                    <Icon name="Loader2" className="mr-2 animate-spin" size={20} />
-                    Генерируем дубликат...
-                  </>
+                  <div className="flex items-center">
+                    <div className="ripple-effect mr-3">
+                      <Icon name="Loader2" className="animate-spin" size={24} />
+                    </div>
+                    Создаём дубликат...
+                  </div>
                 ) : (
-                  <>
-                    <Icon name="Zap" className="mr-2" size={20} />
+                  <div className="flex items-center">
+                    <Icon name="Zap" className="mr-3" size={24} />
                     Сгенерировать дубликат
-                  </>
+                  </div>
                 )}
               </Button>
-            </div>
 
-            {isScanning && (
-              <div className="mt-8 text-center">
-                <div className="scan-wave bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl p-4 mb-4">
-                  <div className="ripple">
-                    <Icon name="Radio" size={32} className="text-blue-600 mx-auto" />
+              {/* Scanning Animation */}
+              {isScanning && (
+                <div className="mt-8">
+                  <div className="glass-card rounded-2xl p-8">
+                    <div className="scan-line h-20 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl flex items-center justify-center mb-4">
+                      <div className="ripple-effect">
+                        <Icon name="ScanLine" size={32} className="text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex justify-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-3 font-light">Анализируем код...</p>
+                    </div>
                   </div>
                 </div>
-                <div className="inline-flex items-center gap-2 text-blue-600">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </Card>
         </div>
       </section>
 
-      {/* Steps Section */}
-      <section className="py-20 px-6 bg-gradient-to-r from-blue-50/50 to-indigo-50/50">
+      {/* Features Section */}
+      <section className="py-32 px-4 bg-gradient-to-b from-transparent to-blue-50/30">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
-              3 простых шага
+          <div className="text-center mb-20">
+            <h3 className="text-4xl md:text-5xl font-light text-gray-800 mb-6">
+              Как это работает
             </h3>
-            <p className="text-xl text-slate-600">
-              Всё что нужно для создания дубликата КИЗ
+            <p className="text-xl text-gray-600 font-light">
+              Три простых шага до готового результата
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <Card className="liquid-glass rounded-2xl p-8 text-center group hover:scale-105 transition-transform duration-300">
-              <div className="mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center mb-4 group-hover:animate-pulse">
-                  <Icon name="ScanLine" size={32} className="text-white" />
+            {[
+              {
+                icon: "ScanLine",
+                title: "Сканируйте",
+                description: "Загрузите изображение DataMatrix кода или введите его вручную",
+                gradient: "from-blue-500 to-cyan-500"
+              },
+              {
+                icon: "Zap",
+                title: "Генерируйте",
+                description: "Наш алгоритм мгновенно создаст точный дубликат вашего кода",
+                gradient: "from-indigo-500 to-purple-500"
+              },
+              {
+                icon: "Download",
+                title: "Скачивайте",
+                description: "Получите готовый к печати файл в высоком качестве",
+                gradient: "from-purple-500 to-pink-500"
+              }
+            ].map((feature, index) => (
+              <Card key={index} className="glass-card rounded-3xl p-8 text-center group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <Icon name={feature.icon as any} size={32} className="text-white" />
                 </div>
-                <h4 className="text-xl font-semibold text-slate-800 mb-2">Считать код</h4>
-                <p className="text-slate-600">
-                  Отсканируйте существующий DataMatrix код с упаковки
-                </p>
-              </div>
-            </Card>
-
-            {/* Step 2 */}
-            <Card className="liquid-glass rounded-2xl p-8 text-center group hover:scale-105 transition-transform duration-300">
-              <div className="mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center mb-4 group-hover:animate-pulse">
-                  <Icon name="Printer" size={32} className="text-white" />
-                </div>
-                <h4 className="text-xl font-semibold text-slate-800 mb-2">Распечатать код</h4>
-                <p className="text-slate-600">
-                  Мгновенно получите готовый дубликат для печати
-                </p>
-              </div>
-            </Card>
-
-            {/* Step 3 */}
-            <Card className="liquid-glass rounded-2xl p-8 text-center group hover:scale-105 transition-transform duration-300">
-              <div className="mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center mb-4 group-hover:animate-pulse">
-                  <Icon name="Package" size={32} className="text-white" />
-                </div>
-                <h4 className="text-xl font-semibold text-slate-800 mb-2">Наклеить на упаковку</h4>
-                <p className="text-slate-600">
-                  Приклейте готовый стикер на новую упаковку
-                </p>
-              </div>
-            </Card>
+                <h4 className="text-2xl font-medium text-gray-800 mb-4">{feature.title}</h4>
+                <p className="text-gray-600 font-light leading-relaxed">{feature.description}</p>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
-              Почему выбирают 2КИЗ
-            </h3>
-            <p className="text-xl text-slate-600">
-              Бесплатно. Просто. Надежно.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Icon name="Wallet" size={24} className="text-white" />
+      <section className="py-32 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-4xl md:text-5xl font-light text-gray-800 mb-16">
+            Почему выбирают нас
+          </h3>
+          
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { icon: "Gift", title: "Бесплатно", subtitle: "Навсегда" },
+              { icon: "Zap", title: "Мгновенно", subtitle: "2-3 секунды" },
+              { icon: "Shield", title: "Безопасно", subtitle: "Без регистрации" }
+            ].map((benefit, index) => (
+              <div key={index} className="group">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg group-hover:shadow-2xl group-hover:scale-110 transition-all duration-300">
+                  <Icon name={benefit.icon as any} size={28} className="text-white" />
+                </div>
+                <h4 className="text-2xl font-medium text-gray-800 mb-2">{benefit.title}</h4>
+                <p className="text-gray-600 font-light">{benefit.subtitle}</p>
               </div>
-              <h4 className="text-xl font-semibold text-slate-800 mb-3">Бесплатно</h4>
-              <p className="text-slate-600">Без скрытых платежей и подписок</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-400 to-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Icon name="Zap" size={24} className="text-white" />
-              </div>
-              <h4 className="text-xl font-semibold text-slate-800 mb-3">Мгновенно</h4>
-              <p className="text-slate-600">Результат за несколько секунд</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-purple-400 to-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Icon name="UserCheck" size={24} className="text-white" />
-              </div>
-              <h4 className="text-xl font-semibold text-slate-800 mb-3">Без регистрации</h4>
-              <p className="text-slate-600">Просто загрузите и работайте</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="mb-8">
-            <h4 className="text-2xl font-semibold mb-2">2КИЗ</h4>
-            <p className="text-slate-400">Первый бесплатный сервис дубликатов КИЗ</p>
-          </div>
-          
-          <div className="border-t border-slate-700 pt-8">
-            <p className="text-slate-400">
-              © 2024 2КИЗ. Честный знак без лишних шагов.
+      <footer className="py-16 px-4 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h4 className="text-3xl font-light mb-4">2КИЗ</h4>
+          <p className="text-gray-400 font-light mb-8">
+            Честный знак без лишних шагов
+          </p>
+          <div className="border-t border-gray-700 pt-8">
+            <p className="text-gray-500 text-sm font-light">
+              © 2024 2КИЗ. Первый бесплатный сервис дубликатов КИЗ
             </p>
           </div>
         </div>
@@ -252,29 +270,35 @@ const Index = () => {
 
       {/* Result Modal */}
       <Dialog open={showResult} onOpenChange={setShowResult}>
-        <DialogContent className="liquid-glass max-w-md mx-auto">
+        <DialogContent className="glass-card max-w-md mx-auto border-0 shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-semibold text-slate-800 mb-4">
-              Дубликат готов! 🎉
+            <DialogTitle className="text-center text-3xl font-light text-gray-800 mb-8">
+              Готово! 🎉
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-6">
+          <div className="space-y-8">
+            {/* Code Display */}
             <div className="text-center">
-              <div className="w-32 h-32 mx-auto bg-white rounded-2xl shadow-lg flex items-center justify-center mb-4 border-2 border-slate-200">
-                <div className="text-xs font-mono text-slate-700 p-2 text-center break-all">
-                  {generatedCode}
+              <div className="w-40 h-40 mx-auto bg-white rounded-3xl shadow-inner flex items-center justify-center mb-6 border border-gray-100">
+                <div className="w-32 h-32 bg-black rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-2 bg-white rounded-lg">
+                    <div className="text-xs font-mono text-black p-2 text-center break-all leading-tight">
+                      {generatedCode}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p className="text-slate-600 text-sm">
-                Ваш DataMatrix код готов к использованию
+              <p className="text-gray-600 font-light">
+                Ваш дубликат готов к использованию
               </p>
             </div>
 
-            <div className="flex gap-3">
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-4">
               <Button 
                 onClick={downloadCode}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12"
+                className="btn-primary h-14 rounded-2xl border-0"
               >
                 <Icon name="Download" className="mr-2" size={20} />
                 Скачать
@@ -282,20 +306,22 @@ const Index = () => {
               <Button 
                 onClick={() => navigator.clipboard.writeText(generatedCode)}
                 variant="outline"
-                className="flex-1 rounded-xl h-12 border-2"
+                className="h-14 rounded-2xl border-2 border-gray-200 hover:border-gray-300 bg-white/60 backdrop-blur-sm"
               >
                 <Icon name="Copy" className="mr-2" size={20} />
                 Копировать
               </Button>
             </div>
 
-            <div className="bg-blue-50 rounded-xl p-4 text-center">
-              <Icon name="Info" className="mx-auto mb-2 text-blue-600" size={24} />
-              <p className="text-sm text-blue-800">
-                Распечатайте код и наклейте на упаковку
+            {/* Info */}
+            <div className="bg-blue-50/50 rounded-2xl p-6 text-center backdrop-blur-sm">
+              <Icon name="Info" className="mx-auto mb-3 text-blue-600" size={24} />
+              <p className="text-sm text-blue-800 font-light">
+                Распечатайте на принтере и наклейте на упаковку
               </p>
             </div>
 
+            {/* New Scan Button */}
             <Button 
               onClick={() => {
                 setShowResult(false);
@@ -303,7 +329,7 @@ const Index = () => {
                 setGeneratedCode('');
               }}
               variant="ghost"
-              className="w-full rounded-xl h-12 text-slate-600"
+              className="w-full h-12 rounded-xl text-gray-600 hover:bg-gray-50"
             >
               Создать новый дубликат
             </Button>

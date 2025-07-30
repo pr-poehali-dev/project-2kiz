@@ -2,15 +2,32 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [dataMatrix, setDataMatrix] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState('');
 
   const handleScan = () => {
     setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 2000);
+    setTimeout(() => {
+      setIsScanning(false);
+      setGeneratedCode(`ДУБЛИКАТ_${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+      setShowResult(true);
+    }, 3000);
+  };
+
+  const downloadCode = () => {
+    const element = document.createElement('a');
+    const file = new Blob([generatedCode], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = 'datamatrix_duplicate.txt';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
   return (
@@ -106,6 +123,11 @@ const Index = () => {
 
             {isScanning && (
               <div className="mt-8 text-center">
+                <div className="scan-wave bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl p-4 mb-4">
+                  <div className="ripple">
+                    <Icon name="Radio" size={32} className="text-blue-600 mx-auto" />
+                  </div>
+                </div>
                 <div className="inline-flex items-center gap-2 text-blue-600">
                   <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
                   <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
@@ -227,6 +249,67 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Result Modal */}
+      <Dialog open={showResult} onOpenChange={setShowResult}>
+        <DialogContent className="liquid-glass max-w-md mx-auto">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-semibold text-slate-800 mb-4">
+              Дубликат готов! 🎉
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto bg-white rounded-2xl shadow-lg flex items-center justify-center mb-4 border-2 border-slate-200">
+                <div className="text-xs font-mono text-slate-700 p-2 text-center break-all">
+                  {generatedCode}
+                </div>
+              </div>
+              <p className="text-slate-600 text-sm">
+                Ваш DataMatrix код готов к использованию
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <Button 
+                onClick={downloadCode}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12"
+              >
+                <Icon name="Download" className="mr-2" size={20} />
+                Скачать
+              </Button>
+              <Button 
+                onClick={() => navigator.clipboard.writeText(generatedCode)}
+                variant="outline"
+                className="flex-1 rounded-xl h-12 border-2"
+              >
+                <Icon name="Copy" className="mr-2" size={20} />
+                Копировать
+              </Button>
+            </div>
+
+            <div className="bg-blue-50 rounded-xl p-4 text-center">
+              <Icon name="Info" className="mx-auto mb-2 text-blue-600" size={24} />
+              <p className="text-sm text-blue-800">
+                Распечатайте код и наклейте на упаковку
+              </p>
+            </div>
+
+            <Button 
+              onClick={() => {
+                setShowResult(false);
+                setDataMatrix('');
+                setGeneratedCode('');
+              }}
+              variant="ghost"
+              className="w-full rounded-xl h-12 text-slate-600"
+            >
+              Создать новый дубликат
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

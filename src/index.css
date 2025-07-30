@@ -1,38 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 248 250 252;
+    --foreground: 15 23 42;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 59 130 246;
+    --primary-foreground: 248 250 252;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 226 232 240;
+    --secondary-foreground: 15 23 42;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 241 245 249;
+    --muted-foreground: 100 116 139;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 239 246 255;
+    --accent-foreground: 15 23 42;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 248 250 252;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 59 130 246;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -97,5 +99,75 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family:
+      "SF Pro Display",
+      -apple-system,
+      BlinkMacSystemFont,
+      system-ui,
+      sans-serif;
+  }
+}
+
+@layer components {
+  .pearl-gradient {
+    background: linear-gradient(
+      135deg,
+      #f8fafc 0%,
+      #e2e8f0 25%,
+      #cbd5e1 50%,
+      #94a3b8 75%,
+      #64748b 100%
+    );
+  }
+
+  .holographic-gradient {
+    background: radial-gradient(
+      157.14% 133.98% at -41.6% 65.41%,
+      rgb(244, 241, 185) 0%,
+      rgb(191, 243, 223) 46%,
+      rgb(200, 220, 255) 65.5%,
+      rgb(218, 143, 221) 83%,
+      rgb(244, 241, 185) 97%
+    );
+  }
+
+  .liquid-glass {
+    backdrop-filter: blur(16px);
+    background: rgba(248, 250, 252, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      -45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 70%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 }
